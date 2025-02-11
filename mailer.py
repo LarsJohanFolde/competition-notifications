@@ -10,8 +10,8 @@ def notify(subscriber: EmailSubscriber, competition: Competition) -> None:
     body = f"""<html>
     <body>
         <p>Dear {subscriber.name},</p>
-        <p>{competition.name} has just been announced on the WCA Website, and will take place in {competition.city} on {competition.start_date.strftime('%A, %B %d')}.</p>
-        <p>Registration for this competition is open from {competition.registration_open.strftime('%H:%M %A, %B %d')} to {competition.registration_close.strftime('%H:%M %A, %B %d')}.</p>
+        <p>{competition.name} has just been announced on the WCA Website, and will take place in {competition.city} on {competition.format_dates()}.</p>
+        <p>Registration for this competition is open from {competition.registration_open_with_timezone('Europe/Oslo').strftime('%H:%M %A, %B %d')} to {competition.registration_close_with_timezone('Europe/Oslo').strftime('%H:%M %A, %B %d')}.</p>
         <p>You can register for this competition <a href="https://worldcubeassociation.org/competitions/{competition.id}">here</a>.</p>
         <p>Best regards,<br>{competition.delegates}</p>
     </body>

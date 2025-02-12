@@ -15,6 +15,7 @@ def fetch_competitions(api_url: str):
         competitions = response.json()
     except requests.exceptions.RequestException as e:
         print(f'Error fetching competitions: {e}')
+        exit()
 
     return competitions
 

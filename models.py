@@ -13,6 +13,7 @@ class Competition:
     registration_open: datetime
     registration_close: datetime
     delegates: str
+    organizers: str
 
     @classmethod
     def from_api_response(cls, api_response):
@@ -24,7 +25,8 @@ class Competition:
             end_date = datetime.fromisoformat(api_response['end_date'].replace('Z', '+00:00')).replace(tzinfo=None),
             registration_open = datetime.fromisoformat(api_response['registration_open'].replace('Z', '+00:00')).replace(tzinfo=None),
             registration_close = datetime.fromisoformat(api_response['registration_close'].replace('Z', '+00:00')).replace(tzinfo=None),
-            delegates = ', '.join([delegate['name'] for delegate in api_response['delegates']])
+            delegates = ', '.join([delegate ['name'] for delegate in api_response['delegates']]),
+            organizers = ', '.join([organizer['name'] for organizer in api_response['organizers']])
         )
 
     @classmethod
@@ -37,7 +39,8 @@ class Competition:
             end_date = row['end_date'],
             registration_open = row['registration_open'],
             registration_close = row['registration_close'],
-            delegates = str(row['delegates'])
+            delegates = row['delegates'],
+            organizers = str(row['organizers'])
         )
 
     def __eq__(self, other):
@@ -51,6 +54,9 @@ class Competition:
             return f"{self.start_date.strftime('%b %d')} - {self.end_date.strftime('%d, %Y')}"
         else:
             return f"{self.start_date.strftime('%b %d, %Y')} - {self.end_date.strftime('%b %d, %Y')}"
+
+    def list_officials(self):
+        return f'{self.organizers}, {self.delegates}'
 
     def registration_open_with_timezone(self, timezone: str) -> datetime:
         tz = pytz.timezone(timezone)

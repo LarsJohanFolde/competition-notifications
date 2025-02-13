@@ -59,7 +59,7 @@ class Competition:
             return f"{self.start_date.strftime('%b %d, %Y')} - {self.end_date.strftime('%b %d, %Y')}"
 
     def list_officials(self):
-        return f'{self.organizers}, {self.delegates}'
+        return ', '.join(set(self.organizers.split(', ') + self.delegates.split(', ')))
 
     def registration_open_with_timezone(self, timezone: str) -> datetime:
         tz = pytz.timezone(timezone)

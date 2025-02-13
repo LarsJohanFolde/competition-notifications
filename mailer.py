@@ -4,8 +4,10 @@ import os
 from dotenv import load_dotenv
 import ssl
 from email.message import EmailMessage
+from email.utils import formataddr
 
 def notify(subscriber: EmailSubscriber, competition: Competition) -> None:
+    sender_name = "Competition Notifications"
     subject: str = f'[Competition Announcement] {competition.name} is announced'
     body = f"""<html>
     <body>
@@ -23,7 +25,7 @@ def notify(subscriber: EmailSubscriber, competition: Competition) -> None:
     password = str(os.getenv("EMAIL_PASSWORD"))
 
     em = EmailMessage()
-    em['From'] = email
+    em['From'] = formataddr((sender_name, email))
     em['To'] = subscriber.email
     em['Subject'] = subject
     em.set_content(body, subtype='html')

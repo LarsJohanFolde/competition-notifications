@@ -12,6 +12,7 @@ class Competition:
     end_date: datetime
     registration_open: datetime
     registration_close: datetime
+    competitor_limit: int
     delegates: str
     organizers: str
 
@@ -25,6 +26,7 @@ class Competition:
             end_date = datetime.fromisoformat(api_response['end_date'].replace('Z', '+00:00')).replace(tzinfo=None),
             registration_open = datetime.fromisoformat(api_response['registration_open'].replace('Z', '+00:00')).replace(tzinfo=None),
             registration_close = datetime.fromisoformat(api_response['registration_close'].replace('Z', '+00:00')).replace(tzinfo=None),
+            competitor_limit = api_response['competitor_limit'],
             delegates = ', '.join([delegate ['name'] for delegate in api_response['delegates']]),
             organizers = ', '.join([organizer['name'] for organizer in api_response['organizers']])
         )
@@ -39,7 +41,8 @@ class Competition:
             end_date = row['end_date'],
             registration_open = row['registration_open'],
             registration_close = row['registration_close'],
-            delegates = row['delegates'],
+            competitor_limit = int(row['competitor_limit']),
+            delegates = str(row['delegates']),
             organizers = str(row['organizers'])
         )
 

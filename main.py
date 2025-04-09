@@ -24,7 +24,7 @@ if __name__ == "__main__":
     COMPETITION_DB = './data/competitions.xlsx'
     API_URL = 'https://www.worldcubeassociation.org/api/v0/competitions?country_iso2=NO'
 
-    competitions = [Competition.from_api_response(competition) for competition in fetch_competitions(API_URL)]
+    competitions: list[Competition] = [Competition.from_api_response(competition) for competition in fetch_competitions(API_URL)]
     stored_competitions: list[Competition] = [Competition.from_series(row[1]) for row in pd.read_excel(COMPETITION_DB).iterrows()]
     email_subscribers: list[EmailSubscriber] = [EmailSubscriber.from_series(row[1]) for row in pd.read_excel(SUBSCRIBER_DB).iterrows()]
 

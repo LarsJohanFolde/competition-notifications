@@ -33,6 +33,7 @@ class Competition:
 
     @classmethod
     def from_series(cls, row: pd.Series):
+        row = row.fillna(0)
         return cls(
             id = str(row['id']),
             name = str(row['name']),

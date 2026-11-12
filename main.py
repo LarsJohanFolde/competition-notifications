@@ -20,8 +20,8 @@ def fetch_competitions(api_url: str):
     return competitions
 
 if __name__ == "__main__":
-    SUBSCRIBER_DB = "./data/subscribers.xlsx"
-    COMPETITION_DB = './data/competitions.xlsx'
+    SUBSCRIBER_DB = "/home/ljfolde/competition-notifications/data/subscribers.xlsx"
+    COMPETITION_DB = '/home/ljfolde/competition-notifications/data/competitions.xlsx'
     API_URL = 'https://www.worldcubeassociation.org/api/v0/competitions?country_iso2=NO'
 
     competitions: list[Competition] = [Competition.from_api_response(competition) for competition in fetch_competitions(API_URL)]

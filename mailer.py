@@ -6,7 +6,17 @@ import ssl
 from email.message import EmailMessage
 from email.utils import formataddr
 
-def notify(subscriber: EmailSubscriber, competition: Competition) -> None:
+load_dotenv()
+EMAIL = str(os.getenv("EMAIL"))
+PASSWORD = str(os.getenv("EMAIL_PASSWORD"))
+
+def connect() -> smtplib.SMTP_SSL:
+    context = ssl.create_default_context()
+    smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context)
+    smtp.login(EMAIL, PASSWORD)
+    return smtp
+
+def notify(smtp: smtplib.SMTP_SSL, subscriber: EmailSubscriber, competition: Competition) -> None:
     sender_name = "Competition Notifications"
     subject: str = f'[Competition Announcement] {competition.name} is announced'
     body = f"""<html>
@@ -19,19 +29,10 @@ def notify(subscriber: EmailSubscriber, competition: Competition) -> None:
     </body>
 </html>"""
 
-    # Load email and password from .env
-    load_dotenv()
-    email = str(os.getenv("EMAIL"))
-    password = str(os.getenv("EMAIL_PASSWORD"))
-
     em = EmailMessage()
-    em['From'] = formataddr((sender_name, email))
+    em['From'] = formataddr((sender_name, EMAIL))
     em['To'] = subscriber.email
     em['Subject'] = subject
     em.set_content(body, subtype='html')
 
-    context = ssl.create_default_context()
-
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-        smtp.login(email, password)
-        smtp.sendmail(email, subscriber.email, em.as_string())
+    smtp.sendmail(EMAIL, subscriber.email, em.as_string())

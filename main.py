@@ -1,6 +1,6 @@
 import pandas as pd
 from pandas.core.api import DataFrame 
-from mailer import notify
+from mailer import connect, notify
 from models import Competition, EmailSubscriber
 import requests
 
@@ -28,12 +28,13 @@ if __name__ == "__main__":
     stored_competitions: list[Competition] = [Competition.from_series(row[1]) for row in pd.read_excel(COMPETITION_DB).iterrows()]
     email_subscribers: list[EmailSubscriber] = [EmailSubscriber.from_series(row[1]) for row in pd.read_excel(SUBSCRIBER_DB).iterrows()]
 
-    for competition in competitions:
-        # Break if competition is already handled
-        if competition in stored_competitions:
-            continue
-        for person in email_subscribers:
-            notify(person, competition)
+    new_competitions = [competition for competition in competitions if competition not in stored_competitions]
+
+    if new_competitions:
+        with connect() as smtp:
+            for competition in new_competitions:
+                for person in email_subscribers:
+                    notify(smtp, person, competition)
 
     competitions_df = DataFrame(competitions)
     competitions_df.to_excel(COMPETITION_DB)
